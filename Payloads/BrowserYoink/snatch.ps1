@@ -72,6 +72,7 @@ foreach ($path in $paths) {
 
     } catch {
         Write-Output "Failed to upload $path"
+        Write-Output $_.Exception.Message
     }
     
 
