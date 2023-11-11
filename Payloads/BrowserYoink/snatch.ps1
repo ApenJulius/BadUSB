@@ -25,6 +25,7 @@ function Upload-ToDropbox {
         [Parameter(Mandatory = $true)]
         [string]$DestinationPath
     )
+        Write-Output "1"
 
     $dropboxApiArg = @{
         "autorename" = $true
@@ -33,14 +34,20 @@ function Upload-ToDropbox {
         "path" = "/$(${DestinationPath} -replace "\\", "/")"
         "strict_conflict" = $false
     }
+        Write-Output "1"
+
     $dropboxApiArgJson = $dropboxApiArg | ConvertTo-Json -Compress
     $dropboxApiArgJson = $dropboxApiArgJson -replace "`r`n", ""
     $FilePath = $FilePath -replace "\\", "/"
     # Send the file content over HTTPS
+        Write-Output "1"
+
     $headers = @{
         "Authorization" = "Bearer $AccessToken"
         "Dropbox-API-Arg" = $dropboxApiArgJson
     }
+        Write-Output "1"
+
     Invoke-WebRequest -Uri "https://content.dropboxapi.com/2/files/upload" `
         -Method Post `
         -Headers $headers `
