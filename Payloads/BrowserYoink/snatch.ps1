@@ -1,9 +1,4 @@
 
-param(
-    [Parameter(Mandatory = $true)]
-    [string]$AccessToken
-)
-
 Write-Output "AccessToken1: $AccessToken"
 
 # Specify the path to the Local State file
