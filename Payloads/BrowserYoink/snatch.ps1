@@ -51,14 +51,25 @@ function Upload-ToDropbox {
 foreach ($path in $paths) {
     # Get the file name
     try {
+        Write-Output "1"
         $parentDirectory = Split-Path -Path $path -Parent
+        Write-Output "1"
+        
         $grandParentDirectory = Split-Path -Path $parentDirectory -Parent
+        Write-Output "1"
+        
         $greatGrandParentDirectory = Split-Path -Path $grandParentDirectory -Parent
+        Write-Output "1"
+        
         $relativePath = $path.Replace($greatGrandParentDirectory + "\", "")
 
+        Write-Output "1"
         $OutPath = Join-Path -Path $currentUser -ChildPath $RelativePath
+        Write-Output "1"
 
         Upload-ToDropbox -FilePath $path -DestinationPath $OutPath
+        Write-Output "1"
+
     } catch {
         Write-Output "Failed to upload $path"
     }
