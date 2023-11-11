@@ -51,6 +51,7 @@ function Upload-ToDropbox {
 
 foreach ($path in $paths) {
     # Get the file name
+    try {
     $parentDirectory = Split-Path -Path $path -Parent
     $grandParentDirectory = Split-Path -Path $parentDirectory -Parent
     $greatGrandParentDirectory = Split-Path -Path $grandParentDirectory -Parent
@@ -59,6 +60,10 @@ foreach ($path in $paths) {
     $OutPath = Join-Path -Path $currentUser -ChildPath $RelativePath
 
     Upload-ToDropbox -FilePath $path -DestinationPath $OutPath
+    } catch {
+        Write-Output "Failed to upload $path"
+    }
+    
 
 }
 
