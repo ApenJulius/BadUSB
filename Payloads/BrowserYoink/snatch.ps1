@@ -56,9 +56,9 @@ foreach ($path in $paths) {
     $greatGrandParentDirectory = Split-Path -Path $grandParentDirectory -Parent
     $relativePath = $path.Replace($greatGrandParentDirectory + "\", "")
 
-    $outPath = $currentUser +"/"+ $relativePath
+    $OutPath = Join-Path -Path $currentUser -ChildPath $RelativePath
 
-    Upload-ToDropbox -FilePath $path -DestinationPath $outPath
+    Upload-ToDropbox -FilePath $path -DestinationPath $OutPath
 
 }
 
