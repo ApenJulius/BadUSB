@@ -5,8 +5,6 @@ $CHROME_PATH_LOCAL_STATE = "$env:LOCALAPPDATA\Google\Chrome\User Data\Local Stat
 $CHROME_PATH = "$env:LOCALAPPDATA\Google\Chrome\User Data\Local State"
 
 
-
-
 function Get-Key {
     Param(
         [Parameter(Mandatory = $true)]
@@ -33,28 +31,3 @@ function Get-Key {
         Write-Output "Local State file not found."
     }
 }
-
-
-function Get-SecretKey {
-    Param(
-        [Parameter(Mandatory = $true)]
-        [string]$path
-        )
-    try {
-        # (1) Get secretkey from chrome local state
-        $localState = Get-Content -Path $path -Raw | ConvertFrom-Json
-        Write-Output $localState.os_crypt.encrypted_key
-        $secretKey = [System.Convert]::FromBase64String($localState.os_crypt.encrypted_key)
-        # Remove suffix DPAPI
-        $secretKey = $secretKey[5..($secretKey.Length - 1)]
-        $secretKey = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR((ConvertTo-SecureString -AsPlainText -Force -String ([System.Text.Encoding]::UTF8.GetString($secretKey)))))
-        Write-Output "$secretKey secret key found"
-        return $secretKey
-    }
-    catch {
-        Write-Output $_.Exception.Message
-        Write-Output "[ERR] Chrome secretkey cannot be found"
-        return $null
-    }
-}
-Get-SecretKey -path $CHROME_PATH_LOCAL_STATE
