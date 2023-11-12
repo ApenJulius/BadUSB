@@ -34,7 +34,6 @@ function Upload-ToDropbox {
     $dropboxApiArgJson = $dropboxApiArgJson -replace "`r`n", ""
     $FilePath = $FilePath -replace "\\", "/"
     # Send the file content over HTTPS
-    Write-Output "AccessToken: $AccessToken"
 
     $headers = @{
         "Authorization" = "Bearer $AccessToken"
