@@ -72,23 +72,22 @@ function Upload-ToDropbox {
 }
 
 foreach ($path in $paths) {
-    # Get the file name
     try {
-        foreach($file in $files) {
+        foreach ($file in $files) {
             try {
                 $fullPath = Join-Path -Path $path -ChildPath $file
                 $parentDirectory = Split-Path -Path $fullPath -Parent
                 $grandParentDirectory = Split-Path -Path $parentDirectory -Parent
                 $greatGrandParentDirectory = Split-Path -Path $grandParentDirectory -Parent
                 $relativePath = $fullPath.Replace($greatGrandParentDirectory + "\", "")
-                $OutPath = Join-Path -Path $currentUser -ChildPath $RelativePath
-                Upload-ToDropbox -FilePath $path -DestinationPath $OutPath
+                $OutPath = Join-Path -Path $currentUser -ChildPath $relativePath
+                Upload-ToDropbox -FilePath $fullPath -DestinationPath $OutPath
             } catch {
-                Write-Output "Failed out of entire thing"
+                Write-Output "Failed processing file: $_"
             } 
-            }
+        }
     } catch {
-        Write-Output "Failed out of entire thing"
+        Write-Output "Failed processing path: $_"
     }
 }
 
