@@ -86,6 +86,7 @@ foreach ($path in $paths) {
             } catch {
                 Write-Output "Failed out of entire thing"
             } 
+            }
     } catch {
         Write-Output "Failed out of entire thing"
     }
