@@ -25,7 +25,7 @@ $files = @(
     "History",
     "Default\History",
     "Default\Visited Links"
-    "Default\Login Data",
+    "Default\Login Data"
 )
 
 
