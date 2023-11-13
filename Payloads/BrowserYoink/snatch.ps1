@@ -83,10 +83,9 @@ foreach ($path in $paths) {
                 $relativePath = $fullPath.Replace($greatGrandParentDirectory + "\", "")
                 $OutPath = Join-Path -Path $currentUser -ChildPath $RelativePath
                 Upload-ToDropbox -FilePath $path -DestinationPath $OutPath
-            }
             } catch {
                 Write-Output "Failed out of entire thing"
-            }   
+            } 
     } catch {
         Write-Output "Failed out of entire thing"
     }
