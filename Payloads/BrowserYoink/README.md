@@ -1,4 +1,3 @@
-# WIP documentation
 # BrowserYoink
 Its your standard data stealer from browsers. This one specifically loops through preset paths and files. Files are sent to dropbox.
 
